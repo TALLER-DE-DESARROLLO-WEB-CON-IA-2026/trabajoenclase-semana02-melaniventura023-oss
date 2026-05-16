@@ -1,0 +1,447 @@
+:root {
+  --rojo: #C0392B;
+  --rojo-oscuro: #7B241C;
+  --dorado: #D4AC0D;
+  --dorado-claro: #F9E79F;
+  --negro: #0D0D0D;
+  --gris-oscuro: #1A1A1A;
+  --gris-medio: #2C2C2C;
+  --crema: #F5F0E8;
+  --blanco-sucio: #EDE8DF;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: #000000;
+  color: var(--crema);
+  font-family: 'Crimson Pro', serif;
+  overflow-x: hidden;
+  cursor: default;
+}
+
+/* ===================== CANVAS FONDO ANIMADO ===================== */
+#bg-canvas {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* ===================== HERO ===================== */
+.hero {
+  position: relative;
+  z-index: 10;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, rgba(192,57,43,0.18) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.hero-eyebrow {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--dorado);
+  margin-bottom: 1.5rem;
+  opacity: 0;
+  animation: fadeUp 1s ease 0.3s forwards;
+}
+
+.hero-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(5rem, 16vw, 14rem);
+  line-height: 0.88;
+  color: var(--crema);
+  text-shadow: 0 0 80px rgba(192,57,43,0.4), 4px 4px 0 var(--rojo-oscuro);
+  opacity: 0;
+  animation: fadeUp 1s ease 0.5s forwards;
+  letter-spacing: 0.02em;
+}
+
+.hero-title span {
+  display: block;
+  color: var(--rojo);
+  text-shadow: 0 0 80px rgba(212,172,13,0.5), 4px 4px 0 rgba(212,172,13,0.3);
+}
+
+.hero-subtitle {
+  font-size: clamp(1rem, 2.5vw, 1.4rem);
+  font-style: italic;
+  color: var(--blanco-sucio);
+  margin-top: 1.5rem;
+  font-weight: 300;
+  opacity: 0;
+  animation: fadeUp 1s ease 0.8s forwards;
+  max-width: 600px;
+}
+
+.scroll-hint {
+  margin-top: 3rem;
+  opacity: 0;
+  animation: fadeUp 1s ease 1.2s forwards;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.3em;
+  color: var(--dorado);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.scroll-line {
+  width: 1px;
+  height: 60px;
+  background: linear-gradient(to bottom, var(--dorado), transparent);
+  animation: scrollPulse 2s ease-in-out infinite;
+}
+
+/* ===================== DIVISOR DECORATIVO ===================== */
+.divisor {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0 2rem;
+  margin: 3rem auto;
+  max-width: 900px;
+}
+
+.divisor::before, .divisor::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--rojo), var(--dorado), transparent);
+}
+
+.divisor-icon {
+  font-size: 1.5rem;
+  color: var(--dorado);
+}
+
+/* ===================== SECCIONES DE BANDAS ===================== */
+.banda-section {
+  position: relative;
+  z-index: 10;
+  padding: 5rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.banda-header {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: end;
+  margin-bottom: 3rem;
+  gap: 1rem;
+}
+
+.banda-numero {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 8rem;
+  line-height: 1;
+  color: rgba(192,57,43,0.15);
+  position: absolute;
+  left: -1rem;
+  top: -1rem;
+  pointer-events: none;
+  user-select: none;
+}
+
+.banda-nombre {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(3rem, 7vw, 6rem);
+  line-height: 1;
+  color: var(--crema);
+  position: relative;
+  text-shadow: 3px 3px 0 var(--rojo-oscuro);
+}
+
+.banda-origen {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.25em;
+  color: var(--dorado);
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+.banda-desc {
+  font-size: 1.1rem;
+  color: rgba(245,240,232,0.75);
+  font-style: italic;
+  max-width: 500px;
+  line-height: 1.7;
+  font-weight: 300;
+}
+
+/* ===================== CARDS DE CANCIONES ===================== */
+.canciones-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2.5rem;
+}
+
+.cancion-card {
+  background: rgba(26,26,26,0.8);
+  border: 1px solid rgba(192,57,43,0.25);
+  border-radius: 2px;
+  overflow: hidden;
+  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+}
+
+.cancion-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 3px; height: 100%;
+  background: linear-gradient(to bottom, var(--dorado), var(--rojo));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.cancion-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(212,172,13,0.5);
+  box-shadow: 0 20px 60px rgba(192,57,43,0.2);
+}
+
+.cancion-card:hover::before {
+  opacity: 1;
+}
+
+.card-img-wrap {
+  position: relative;
+  height: 200px;
+  overflow: hidden;
+}
+
+.card-img-wrap img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  filter: saturate(0.7) contrast(1.1);
+  transition: filter 0.4s ease, transform 0.4s ease;
+}
+
+.cancion-card:hover .card-img-wrap img {
+  filter: saturate(1.1) contrast(1.1);
+  transform: scale(1.05);
+}
+
+.card-img-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(13,13,13,0.95) 0%, rgba(13,13,13,0.3) 50%, transparent 100%);
+}
+
+.card-anno {
+  position: absolute;
+  top: 12px; right: 12px;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.65rem;
+  color: var(--dorado);
+  background: rgba(13,13,13,0.75);
+  padding: 3px 8px;
+  letter-spacing: 0.15em;
+  border: 1px solid rgba(212,172,13,0.3);
+}
+
+.card-body {
+  padding: 1.25rem 1.25rem 1.5rem;
+}
+
+.card-titulo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.5rem;
+  color: var(--crema);
+  margin-bottom: 0.4rem;
+  letter-spacing: 0.04em;
+  line-height: 1.1;
+}
+
+.card-album {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  color: rgba(212,172,13,0.7);
+  text-transform: uppercase;
+  margin-bottom: 0.8rem;
+}
+
+.card-texto {
+  font-size: 0.92rem;
+  color: rgba(245,240,232,0.6);
+  line-height: 1.65;
+  font-weight: 300;
+}
+
+.card-nota {
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.nota-estrella {
+  color: var(--dorado);
+  font-size: 0.8rem;
+}
+
+/* ===================== SEPARADOR DE BANDA ===================== */
+.banda-separador {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(to right, transparent 0%, rgba(192,57,43,0.5) 20%, rgba(212,172,13,0.5) 50%, rgba(192,57,43,0.5) 80%, transparent 100%);
+  margin: 1rem 0;
+}
+
+/* ===================== FOOTER ===================== */
+footer {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+  padding: 4rem 2rem 5rem;
+  border-top: 1px solid rgba(192,57,43,0.2);
+}
+
+footer .footer-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 3rem;
+  color: var(--rojo);
+  letter-spacing: 0.1em;
+  text-shadow: 2px 2px 0 var(--rojo-oscuro);
+}
+
+footer p {
+  margin-top: 1rem;
+  font-size: 0.85rem;
+  font-style: italic;
+  color: rgba(245,240,232,0.4);
+  letter-spacing: 0.05em;
+}
+
+/* ===================== ANIMACIONES ===================== */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scrollPulse {
+  0%, 100% { opacity: 0.4; }
+  50%       { opacity: 1; }
+}
+
+/* Reveal on scroll */
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ===================== NAV ===================== */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.2rem 2.5rem;
+  background: rgba(13,13,13,0.85);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(192,57,43,0.15);
+}
+
+.nav-logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.4rem;
+  color: var(--dorado);
+  letter-spacing: 0.15em;
+}
+
+.nav-links {
+  display: flex;
+  gap: 2rem;
+  list-style: none;
+}
+
+.nav-links a {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(245,240,232,0.6);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.nav-links a:hover { color: var(--dorado); }
+
+/* Tagline flotante */
+.tagline-flotante {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+  padding: 2rem 1rem 0;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(1.5rem, 4vw, 3rem);
+  color: rgba(192,57,43,0.4);
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+}
+
+/* Decorative quote */
+.gran-cita {
+  position: relative;
+  z-index: 10;
+  max-width: 800px;
+  margin: 4rem auto;
+  padding: 3rem;
+  border-left: 3px solid var(--rojo);
+  background: rgba(192,57,43,0.05);
+}
+
+.gran-cita blockquote {
+  font-size: clamp(1.3rem, 3vw, 2rem);
+  font-style: italic;
+  font-weight: 300;
+  line-height: 1.5;
+  color: var(--crema);
+}
+
+.gran-cita cite {
+  display: block;
+  margin-top: 1rem;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  color: var(--dorado);
+  font-style: normal;
+}
