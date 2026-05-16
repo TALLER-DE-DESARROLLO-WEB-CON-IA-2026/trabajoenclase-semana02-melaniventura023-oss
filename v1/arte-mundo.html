@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ARTE MUNDO — Galería Universal</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300;1,600&display=swap" rel="stylesheet">
+
+  <!-- Estilos externos -->
+  <link rel="stylesheet" href="arte-mundo.css">
+</head>
+<body>
+
+<!-- CANVAS — Fondo animado (controlado por arte-mundo.js) -->
+<canvas id="bgCanvas"></canvas>
+
+<!-- CURSOR PERSONALIZADO -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- ══ HEADER ══ -->
+<header>
+  <div class="logo">Arte<span>Mundo</span></div>
+  <nav>
+    <a    href="#categorias">Categorías</a>
+    <a href="#galeria">Galería</a>
+    <a href="#movimientos">Movimientos</a>
+    <a href="#artistas">Artistas</a>
+  </nav>
+</header>
+
+<!-- ══ HERO ══ -->
+<section id="hero">
+  <div class="hero-floats">
+    <div class="float-img fi1">
+      <img src="https://images.unsplash.com/photo-1541367777708-7905fe3296c0?w=500&q=80" alt="Arte abstracto">
+    </div>
+    <div class="float-img fi2">
+      <img src="https://images.unsplash.com/photo-1578321272176-b7bbc0679853?w=400&q=80" alt="Pintura colorida">
+    </div>
+    <div class="float-img fi3">
+      <img src="https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?w=350&q=80" alt="Arte clásico">
+    </div>
+  </div>
+
+  <div class="hero-content">
+    <p class="hero-tag">Galería Universal de Arte</p>
+    <h1 class="hero-title">
+      El arte<br>
+      <span class="line-pink">nos hace</span>
+      <span class="line-yellow">humanos.</span>
+    </h1>
+    <p class="hero-sub">Desde las cuevas de Altamira hasta los píxeles del arte digital. Una exploración infinita de la creatividad humana a través del color, la forma y el tiempo.</p>
+    <div class="hero-buttons">
+      <a href="#galeria" class="btn-primary">Explorar galería</a>
+      <a href="#movimientos" class="btn-secondary">Ver movimientos</a>
+      <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer" class="btn-secondary">Instagram</a>
+      <a href="https://www.facebook.com/Historiadelahumanidad/posts/hombre-de-toquepala-periodo-precer%C3%A1mico-l%C3%ADtico-denominaciones-hombre-de-toquepal/444565861024706/" target="_blank" rel="noopener noreferrer" class="btn-secondary">Facebook</a>
+    </div>
+  </div>
+
+  <div class="scroll-hint">Desplázate ↓</div>
+</section>
+
+<!-- ══ MARQUEE ══ -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <span class="marquee-item">Pintura <span class="mdot">✦</span></span>
+    <span class="marquee-item">Escultura <span class="mdot">✦</span></span>
+    <span class="marquee-item">Fotografía <span class="mdot">✦</span></span>
+    <span class="marquee-item">Arte Digital <span class="mdot">✦</span></span>
+    <span class="marquee-item">Instalación <span class="mdot">✦</span></span>
+    <span class="marquee-item">Grabado <span class="mdot">✦</span></span>
+    <span class="marquee-item">Arte Urbano <span class="mdot">✦</span></span>
+    <span class="marquee-item">Performance <span class="mdot">✦</span></span>
+    <span class="marquee-item">Cerámica <span class="mdot">✦</span></span>
+    <span class="marquee-item">Cine <span class="mdot">✦</span></span>
+    <span class="marquee-item">Pintura <span class="mdot">✦</span></span>
+    <span class="marquee-item">Escultura <span class="mdot">✦</span></span>
+    <span class="marquee-item">Fotografía <span class="mdot">✦</span></span>
+    <span class="marquee-item">Arte Digital <span class="mdot">✦</span></span>
+    <span class="marquee-item">Instalación <span class="mdot">✦</span></span>
+    <span class="marquee-item">Grabado <span class="mdot">✦</span></span>
+    <span class="marquee-item">Arte Urbano <span class="mdot">✦</span></span>
+    <span class="marquee-item">Performance <span class="mdot">✦</span></span>
+    <span class="marquee-item">Cerámica <span class="mdot">✦</span></span>
+    <span class="marquee-item">Cine <span class="mdot">✦</span></span>
+  </div>
+</div>
+
+<!-- ══ 01 — CATEGORÍAS ══ -->
+<section id="categorias">
+  <div class="section-label reveal">// 01 — Disciplinas</div>
+  <h2 class="section-title reveal"><span class="gw">Formas</span> del Arte</h2>
+
+  <div class="categories-grid reveal">
+    <div class="cat-card">
+      <div class="cat-color-bar"></div>
+      <img src="img/la noch estrellada.jpg" alt="La noche estrellada">
+      <div class="cat-info">
+        <span class="cat-badge">Pintura</span>
+        <h3 class="cat-name">El color como<br>lenguaje universal</h3>
+        <p class="cat-desc">Desde el Renacimiento hasta el expresionismo abstracto, la pintura ha sido el espejo del alma humana.</p>
+      </div>
+    </div>
+    <div class="cat-card">
+      <div class="cat-color-bar"></div>
+      <img src="https://images.unsplash.com/photo-1622737133809-d95047b9e673?w=500&q=80" alt="Escultura">
+      <div class="cat-info">
+        <span class="cat-badge">Escultura</span>
+        <h3 class="cat-name">La materia que cobra vida</h3>
+        <p class="cat-desc">Mármol, bronce, madera: la tridimensionalidad del arte que se puede rodear.</p>
+      </div>
+    </div>
+    <div class="cat-card">
+      <div class="cat-color-bar"></div>
+      <img src="https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=500&q=80" alt="Arquitectura">
+      <div class="cat-info">
+        <span class="cat-badge">Arquitectura</span>
+        <h3 class="cat-name">Arte que habitamos</h3>
+        <p class="cat-desc">El espacio construido como expresión cultural, social y estética de cada civilización.</p>
+      </div>
+    </div>
+    <div class="cat-card">
+      <div class="cat-color-bar"></div>
+      <img src="https://images.unsplash.com/photo-1495121553079-4c61bcce1894?w=900&q=80" alt="Arte Digital">
+      <div class="cat-info">
+        <span class="cat-badge">Arte Digital</span>
+        <h3 class="cat-name">El nuevo renacimiento</h3>
+        <p class="cat-desc">NFTs, generative art, IA creativa: la frontera digital redefine qué significa hacer arte.</p>
+      </div>
+    </div>
+    <div class="cat-card">
+      <div class="cat-color-bar"></div>
+      <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=500&q=80" alt="Fotografía">
+      <div class="cat-info">
+        <span class="cat-badge">Fotografía</span>
+        <h3 class="cat-name">Capturar lo eterno</h3>
+        <p class="cat-desc">Un instante congelado para siempre: la fotografía como testimonio y como poesía visual.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CITA ══ -->
+<div class="quote-section">
+  <div class="quote-orbs">
+    <div class="orb orb1"></div>
+    <div class="orb orb2"></div>
+    <div class="orb orb3"></div>
+  </div>
+  <blockquote>
+    <span class="quote-mark">"</span>
+    <p>"El arte no reproduce lo visible;<br>más bien, <strong>lo hace visible</strong>."</p>
+    <cite>— Paul Klee, pintor y teórico del arte</cite>
+  </blockquote>
+</div>
+
+<!-- ══ 02 — GALERÍA ══ -->
+<section id="galeria">
+  <div class="section-header reveal">
+    <div class="section-label">// 02 — Galería</div>
+    <h2 class="section-title"><span class="gc">Obras</span> que inspiran</h2>
+  </div>
+  <div class="masonry reveal">
+    <div class="masonry-item"><img src="https://images.unsplash.com/photo-1578321272176-b7bbc0679853?w=600&q=80" alt=""><div class="masonry-caption"><h4>Sin título #1</h4><span><span class="tag-dot"></span>Acrílico · 2023</span></div></div>
+    <div class="masonry-item"><img src="https://images.unsplash.com/photo-1580136608978-e8b9e22e9f00?w=600&q=80" alt=""><div class="masonry-caption"><h4>Fragmentos</h4><span><span class="tag-dot"></span>Collage digital · 2022</span></div></div>
+    <div class="masonry-item"><img src="https://images.unsplash.com/photo-1551913902-c92207136625?w=600&q=80" alt=""><div class="masonry-caption"><h4>Naturaleza Muerta</h4><span><span class="tag-dot"></span>Óleo · S.XVII</span></div></div>
+    <div class="masonry-item"><img src="https://images.unsplash.com/photo-1500479694472-551d1fb6258d?w=600&q=80" alt=""><div class="masonry-caption"><h4>Horizonte</h4><span><span class="tag-dot"></span>Fotografía · 2024</span></div></div>
+    <div class="masonry-item"><img src="https://images.unsplash.com/photo-1565436527561-b2bf18649d6d?w=600&q=80" alt=""><div class="masonry-caption"><h4>Espacio Vacío</h4><span><span class="tag-dot"></span>Instalación · 2021</span></div></div>
+    <div class="masonry-item"><img src="https://images.unsplash.com/photo-1547826039-bfc35e0f1ea8?w=600&q=80" alt=""><div class="masonry-caption"><h4>Formas en Reposo</h4><span><span class="tag-dot"></span>Escultura · Mármol</span></div></div>
+    <div class="masonry-item"><img src="https://images.unsplash.com/photo-1562396826-1bcc3ee34df4?w=600&q=80" alt=""><div class="masonry-caption"><h4>Cromática</h4><span><span class="tag-dot"></span>Acrílico · 2023</span></div></div>
+    <div class="masonry-item"><img src="https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=600&q=80" alt=""><div class="masonry-caption"><h4>Geometría Sagrada</h4><span><span class="tag-dot"></span>Arte Generativo · 2024</span></div></div>
+    <div class="masonry-item"><img src="https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?w=600&q=80" alt=""><div class="masonry-caption"><h4>Retrato Interior</h4><span><span class="tag-dot"></span>Óleo · 2020</span></div></div>
+  </div>
+</section>
+
+<div class="rainbow-bar"></div>
+
+<!-- ══ 03 — MOVIMIENTOS ══ -->
+<section id="movimientos">
+  <div class="section-label reveal">// 03 — Historia</div>
+  <h2 class="section-title reveal">Grandes <span class="gw">Movimientos</span></h2>
+  <div class="movements-grid reveal">
+    <div class="movement-item m1" data-num="01"><div class="movement-year">1400 — 1600</div><h3 class="movement-name">Renacimiento</h3><p class="movement-desc">El redescubrimiento clásico y el humanismo transformaron radicalmente el arte europeo.</p></div>
+    <div class="movement-item m2" data-num="02"><div class="movement-year">1860 — 1900</div><h3 class="movement-name">Impresionismo</h3><p class="movement-desc">Monet, Renoir y Degas rompieron con la academia para capturar la fugacidad de la luz.</p></div>
+    <div class="movement-item m3" data-num="03"><div class="movement-year">1907 — 1920</div><h3 class="movement-name">Cubismo</h3><p class="movement-desc">Picasso y Braque fragmentaron la realidad en múltiples perspectivas simultáneas.</p></div>
+    <div class="movement-item m4" data-num="04"><div class="movement-year">1916 — 1925</div><h3 class="movement-name">Dadaísmo</h3><p class="movement-desc">Una rebelión contra la lógica y el orden burgués que cuestionó los fundamentos del arte.</p></div>
+    <div class="movement-item m5" data-num="05"><div class="movement-year">1924 — 1950</div><h3 class="movement-name">Surrealismo</h3><p class="movement-desc">Dalí, Magritte y Ernst exploraron el inconsciente y los sueños como fuente de imágenes.</p></div>
+    <div class="movement-item m6" data-num="06"><div class="movement-year">1940 — 1960</div><h3 class="movement-name">Expresionismo Abstracto</h3><p class="movement-desc">Pollock y Rothko convirtieron el gesto y la emoción pura en el centro de la obra.</p></div>
+    <div class="movement-item m7" data-num="07"><div class="movement-year">1960 — 1970</div><h3 class="movement-name">Pop Art</h3><p class="movement-desc">Warhol y Lichtenstein elevaron la cultura popular y el consumismo a categoría de arte.</p></div>
+    <div class="movement-item m8" data-num="08"><div class="movement-year">1990 — hoy</div><h3 class="movement-name">Arte Contemporáneo</h3><p class="movement-desc">Sin límites ni definición: el arte actual explora tecnología, política, identidad y cuerpo.</p></div>
+  </div>
+</section>
+
+<!-- ══ 04 — ARTISTAS ══ -->
+<section id="artistas">
+  <div class="section-label reveal">// 04 — Maestros</div>
+  <h2 class="section-title reveal">Artistas que <span class="gc">cambiaron todo</span></h2>
+  <div class="artists-layout reveal">
+    <div class="artist-nav">
+      <div class="artist-tab active"  onclick="showArtist('frida',   this)">Frida Kahlo</div>
+      <div class="artist-tab"         onclick="showArtist('picasso',  this)">Pablo Picasso</div>
+      <div class="artist-tab"         onclick="showArtist('basquiat', this)">Jean-Michel Basquiat</div>
+      <div class="artist-tab"         onclick="showArtist('kusama',   this)">Yayoi Kusama</div>
+    </div>
+    <div>
+      <div class="artist-display active" id="a-frida">
+        <div class="artist-img"><img src="https://images.unsplash.com/photo-1580136608978-e8b9e22e9f00?w=400&q=80" alt="Frida Kahlo"></div>
+        <div class="artist-info">
+          <div class="artist-period">1907 — 1954 · México</div>
+          <h3 class="artist-name">Frida<br><em>Kahlo</em></h3>
+          <p class="artist-bio">Icono del arte latinoamericano, Kahlo transformó el dolor físico y emocional en obras de una intensidad simbólica sin igual. Sus autorretratos exploran la identidad, el género y el sufrimiento con honestidad brutal y colores vibrantes.</p>
+          <div class="artist-works">
+            <div class="work-thumb"><img src="https://images.unsplash.com/photo-1578321272176-b7bbc0679853?w=100&q=60" alt=""></div>
+            <div class="work-thumb"><img src="https://images.unsplash.com/photo-1562396826-1bcc3ee34df4?w=100&q=60" alt=""></div>
+            <div class="work-thumb"><img src="https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?w=100&q=60" alt=""></div>
+          </div>
+        </div>
+      </div>
+      <div class="artist-display" id="a-picasso">
+        <div class="artist-img"><img src="https://images.unsplash.com/photo-1551913902-c92207136625?w=400&q=80" alt="Picasso"></div>
+        <div class="artist-info">
+          <div class="artist-period">1881 — 1973 · España</div>
+          <h3 class="artist-name">Pablo<br><em>Picasso</em></h3>
+          <p class="artist-bio">Co-fundador del cubismo y uno de los artistas más prolíficos del siglo XX. Picasso reinventó continuamente su lenguaje visual produciendo más de 20.000 obras en pintura, escultura, cerámica y grabado.</p>
+          <div class="artist-works">
+            <div class="work-thumb"><img src="https://images.unsplash.com/photo-1565436527561-b2bf18649d6d?w=100&q=60" alt=""></div>
+            <div class="work-thumb"><img src="https://images.unsplash.com/photo-1547826039-bfc35e0f1ea8?w=100&q=60" alt=""></div>
+            <div class="work-thumb"><img src="https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=100&q=60" alt=""></div>
+          </div>
+        </div>
+      </div>
+      <div class="artist-display" id="a-basquiat">
+        <div class="artist-img"><img src="https://images.unsplash.com/photo-1605721911519-3dfeb3be25e7?w=400&q=80" alt="Basquiat"></div>
+        <div class="artist-info">
+          <div class="artist-period">1960 — 1988 · EE.UU.</div>
+          <h3 class="artist-name">Jean-Michel<br><em>Basquiat</em></h3>
+          <p class="artist-bio">Surgido del grafiti neoyorquino, Basquiat fusionó texto, símbolo y pintura gestual para abordar el racismo, la identidad y el poder. Su obra explosiva lo convirtió en estrella antes de su muerte a los 27 años.</p>
+          <div class="artist-works">
+            <div class="work-thumb"><img src="https://images.unsplash.com/photo-1622737133809-d95047b9e673?w=100&q=60" alt=""></div>
+            <div class="work-thumb"><img src="https://images.unsplash.com/photo-1500479694472-551d1fb6258d?w=100&q=60" alt=""></div>
+            <div class="work-thumb"><img src="https://images.unsplash.com/photo-1495121553079-4c61bcce1894?w=100&q=60" alt=""></div>
+          </div>
+        </div>
+      </div>
+      <div class="artist-display" id="a-kusama">
+        <div class="artist-img"><img src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&q=80" alt="Kusama"></div>
+        <div class="artist-info">
+          <div class="artist-period">1929 — presente · Japón</div>
+          <h3 class="artist-name">Yayoi<br><em>Kusama</em></h3>
+          <p class="artist-bio">Con mundos de puntos infinitos y salas de espejos, Kusama convierte la obsesión en asombro. Pionera del arte de instalación desde los años 60, su obra borra los límites entre el yo y el universo.</p>
+          <div class="artist-works">
+            <div class="work-thumb"><img src="https://images.unsplash.com/photo-1547891654-e66ed7ebb968?w=100&q=60" alt=""></div>
+            <div class="work-thumb"><img src="https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=100&q=60" alt=""></div>
+            <div class="work-thumb"><img src="https://images.unsplash.com/photo-1578321272176-b7bbc0679853?w=100&q=60" alt=""></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ ESTADÍSTICAS ══ -->
+<div class="stats-section">
+  <div class="stat-item reveal"><div class="stat-number">50K+</div><div class="stat-label">Obras catalogadas</div></div>
+  <div class="stat-item reveal"><div class="stat-number">180</div><div class="stat-label">Países representados</div></div>
+  <div class="stat-item reveal"><div class="stat-number">7</div><div class="stat-label">Milenios de historia</div></div>
+  <div class="stat-item reveal"><div class="stat-number">∞</div><div class="stat-label">Interpretaciones posibles</div></div>
+</div>
+
+<div class="rainbow-bar"></div>
+
+<!-- ══ NEWSLETTER ══ -->
+<div class="newsletter-section">
+  <div class="nl-orbs">
+    <div class="nl-orb nl-orb1"></div>
+    <div class="nl-orb nl-orb2"></div>
+  </div>
+  <h2 class="newsletter-title">Nunca dejes de mirar</h2>
+  <p class="newsletter-sub">Cada semana, una obra, un artista, una historia que cambia tu forma de ver el mundo.</p>
+  <div class="newsletter-form">
+    <input type="email" placeholder="tu@correo.com">
+    <button>Suscribirse</button>
+  </div>
+</div>
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <span class="logo-text">ArteMundo</span>
+      <p>Una ventana abierta a todas las formas de expresión artística que la humanidad ha creado a lo largo de su historia.</p>
+    </div>
+    <div class="footer-col">
+      <h5>Explorar</h5>
+      <a href="#">Pintura</a><a href="#">Escultura</a><a href="#">Fotografía</a><a href="#">Arte Digital</a>
+    </div>
+    <div class="footer-col">
+      <h5>Historia</h5>
+      <a href="#">Arte Antiguo</a><a href="#">Arte Medieval</a><a href="#">Arte Moderno</a><a href="#">Arte Contemporáneo</a>
+    </div>
+    <div class="footer-col">
+      <h5>Comunidad</h5>
+      <a href="#">Artistas</a><a href="#">Exposiciones</a><a href="#">Talleres</a><a href="#">Blog</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 ArteMundo — Todos los derechos reservados</p>
+    <p>Hecho con ✦ para todos los amantes del arte</p>
+  </div>
+</footer>
+
+<!-- JavaScript externo — al final del body -->
+<script src="arte-mundo.js"></script>
+
+</body>
+</html>
