@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Rock en Español — La Leyenda Vive</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Archivo+Black&family=Libre+Baskerville:ital@1&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --accent1: #ff3c00;
+      --accent2: #ffcc00;
+      --accent3: #00e5ff;
+      --text: #f0ede6;
+      --muted: #7a7a8a;
+      --card-bg: rgba(255,255,255,0.04);
+      --border: rgba(255,255,255,0.08);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Space Mono', monospace;
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* ── Custom cursor ── */
+    .cursor {
+      position: fixed; width: 14px; height: 14px;
+      background: var(--accent1); border-radius: 50%;
+      pointer-events: none; z-index: 9999;
+      transform: translate(-50%,-50%);
+      transition: transform .1s, width .2s, height .2s, background .2s;
+      mix-blend-mode: difference;
+    }
+    .cursor-ring {
+      position: fixed; width: 40px; height: 40px;
+      border: 2px solid var(--accent2); border-radius: 50%;
+      pointer-events: none; z-index: 9998;
+      transform: translate(-50%,-50%);
+      transition: transform .25s ease, width .3s, height .3s, border-color .3s;
+    }
+    body:has(a:hover) .cursor { width: 20px; height: 20px; background: var(--accent2); }
+    body:has(a:hover) .cursor-ring { width: 60px; height: 60px; border-color: var(--accent1); }
+
+    /* ── Animated starfield canvas ── */
+    #bg-canvas {
+      position: fixed; inset: 0; z-index: 0;
+      pointer-events: none;
+    }
+
+    /* ── Noise overlay ── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0; z-index: 1;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+      pointer-events: none; opacity: .6;
+    }
+
+    /* ── Layout ── */
+    main { position: relative; z-index: 2; }
+
+    /* ── Hero ── */
+    .hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center;
+      padding: 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 70% 60% at 50% 60%, rgba(255,60,0,.18) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-eyebrow {
+      font-family: 'Space Mono', monospace;
+      font-size: .7rem; letter-spacing: .4em;
+      color: var(--accent2);
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+      opacity: 0; animation: fadeUp .8s .2s forwards;
+    }
+    .hero-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(5rem, 18vw, 14rem);
+      line-height: .88;
+      letter-spacing: -.02em;
+      background: linear-gradient(135deg, #ff3c00 0%, #ffcc00 50%, #ff3c00 100%);
+      background-size: 200%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: shimmer 4s linear infinite, fadeUp .9s .4s both;
+    }
+    @keyframes shimmer { to { background-position: 200% 0; } }
+
+    .hero-sub {
+      font-family: 'Libre Baskerville', serif;
+      font-style: italic;
+      font-size: clamp(1rem, 2.5vw, 1.5rem);
+      color: var(--accent3);
+      margin-top: 1.2rem;
+      opacity: 0; animation: fadeUp .8s .6s forwards;
+    }
+    .hero-scroll {
+      position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: .5rem;
+      font-size: .65rem; letter-spacing: .25em; color: var(--muted);
+      animation: bounce 2s 1.5s infinite;
+    }
+    .hero-scroll span { display: block; width: 1px; height: 40px; background: var(--muted); }
+
+    @keyframes bounce { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(6px)} }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
+
+    /* ── Marquee ── */
+    .marquee-wrap {
+      overflow: hidden;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      background: rgba(255,60,0,.07);
+      padding: .6rem 0;
+    }
+    .marquee-track {
+      display: flex; gap: 3rem;
+      animation: marquee 28s linear infinite;
+      white-space: nowrap;
+    }
+    .marquee-track span {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.4rem; letter-spacing: .1em;
+      color: var(--accent2);
+      flex-shrink: 0;
+    }
+    .marquee-track span.dot { color: var(--accent1); }
+    @keyframes marquee { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+    /* ── Section ── */
+    section { padding: 5rem 2rem; max-width: 1300px; margin: 0 auto; }
+    .section-label {
+      font-size: .65rem; letter-spacing: .4em;
+      color: var(--accent1); text-transform: uppercase;
+      margin-bottom: .8rem;
+    }
+    .section-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2.5rem, 7vw, 5.5rem);
+      line-height: 1;
+      margin-bottom: 3rem;
+    }
+    .section-title em {
+      font-family: 'Libre Baskerville', serif;
+      font-style: italic;
+      color: var(--accent3);
+    }
+
+    /* ── Band cards ── */
+    .bands-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+    .band-card {
+      position: relative;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+      background: var(--card-bg);
+      transition: transform .3s, box-shadow .3s;
+      cursor: none;
+    }
+    .band-card:hover {
+      transform: translateY(-6px) rotate(.4deg);
+      box-shadow: 0 20px 60px rgba(255,60,0,.25);
+    }
+    .band-img {
+      width: 100%; height: 220px; object-fit: cover;
+      display: block;
+      filter: grayscale(30%) contrast(1.1);
+      transition: filter .4s;
+    }
+    .band-card:hover .band-img { filter: grayscale(0%) contrast(1.15) saturate(1.2); }
+
+    .band-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(10,10,15,.95) 0%, transparent 55%);
+    }
+    .band-info {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      padding: 1.2rem;
+    }
+    .band-country {
+      font-size: .6rem; letter-spacing: .3em;
+      color: var(--accent2); text-transform: uppercase;
+      margin-bottom: .3rem;
+    }
+    .band-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.8rem; line-height: 1;
+      margin-bottom: .3rem;
+    }
+    .band-genre {
+      font-size: .65rem; color: var(--muted);
+      letter-spacing: .05em;
+    }
+    .band-year {
+      position: absolute; top: 1rem; right: 1rem;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1rem; color: var(--accent1);
+      background: rgba(10,10,15,.7);
+      padding: .2rem .6rem; border-radius: 2px;
+      border: 1px solid var(--accent1);
+    }
+
+    /* ── Hits ── */
+    .hits-section { background: rgba(0,229,255,.03); }
+    .hits-list { display: flex; flex-direction: column; gap: .8rem; }
+
+    .hit-item {
+      display: grid;
+      grid-template-columns: 3rem 1fr auto;
+      align-items: center; gap: 1rem;
+      padding: 1rem 1.2rem;
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      background: var(--card-bg);
+      transition: background .25s, border-color .25s, transform .2s;
+      cursor: none;
+    }
+    .hit-item:hover {
+      background: rgba(255,60,0,.08);
+      border-color: var(--accent1);
+      transform: translateX(6px);
+    }
+    .hit-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2rem; color: var(--accent1);
+      opacity: .5; text-align: center;
+      transition: opacity .2s;
+    }
+    .hit-item:hover .hit-num { opacity: 1; }
+    .hit-title {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 1rem; margin-bottom: .2rem;
+    }
+    .hit-band {
+      font-size: .7rem; color: var(--accent3);
+      letter-spacing: .05em;
+    }
+    .hit-year {
+      font-size: .75rem; color: var(--muted);
+      font-family: 'Space Mono', monospace;
+    }
+    .hit-bar {
+      grid-column: 2 / -1;
+      height: 2px; background: var(--border);
+      border-radius: 99px; overflow: hidden;
+      margin-top: .4rem;
+    }
+    .hit-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent1), var(--accent2));
+      border-radius: 99px;
+      transition: width .6s ease;
+    }
+
+    /* ── Era timeline ── */
+    .timeline { position: relative; }
+    .timeline::before {
+      content: '';
+      position: absolute; left: 50%; top: 0; bottom: 0;
+      width: 1px; background: var(--border);
+      transform: translateX(-50%);
+    }
+    .era-item {
+      display: grid;
+      grid-template-columns: 1fr 80px 1fr;
+      gap: 1rem; margin-bottom: 3rem;
+      align-items: center;
+    }
+    .era-content {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1.2rem;
+      transition: border-color .3s;
+    }
+    .era-content:hover { border-color: var(--accent2); }
+    .era-item:nth-child(odd) .era-content:first-child { order: 0; }
+    .era-item:nth-child(odd) .era-spacer { order: 1; }
+    .era-item:nth-child(odd) .era-empty { order: 2; background: none; border: none; }
+    .era-item:nth-child(even) .era-empty { order: 0; background: none; border: none; }
+    .era-item:nth-child(even) .era-spacer { order: 1; }
+    .era-item:nth-child(even) .era-content { order: 2; }
+
+    .era-spacer {
+      display: flex; align-items: center; justify-content: center;
+    }
+    .era-dot {
+      width: 44px; height: 44px; border-radius: 50%;
+      border: 2px solid var(--accent2);
+      background: var(--bg);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: .75rem; color: var(--accent2);
+      letter-spacing: .05em;
+      flex-shrink: 0;
+    }
+    .era-decade {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2rem; color: var(--accent1); margin-bottom: .3rem;
+    }
+    .era-desc { font-size: .8rem; color: var(--muted); line-height: 1.6; }
+
+    /* ── Quote ── */
+    .quote-block {
+      text-align: center;
+      padding: 5rem 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .quote-block::before {
+      content: '"';
+      position: absolute; top: -2rem; left: 50%; transform: translateX(-50%);
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 20rem; color: rgba(255,60,0,.05);
+      line-height: 1; pointer-events: none;
+    }
+    .quote-text {
+      font-family: 'Libre Baskerville', serif;
+      font-style: italic;
+      font-size: clamp(1.3rem, 3vw, 2.2rem);
+      line-height: 1.5;
+      max-width: 750px; margin: 0 auto 1.5rem;
+      position: relative;
+    }
+    .quote-attr {
+      font-size: .7rem; letter-spacing: .3em;
+      color: var(--accent2); text-transform: uppercase;
+    }
+
+    /* ── Gallery ── */
+    .gallery {
+      columns: 3; gap: 1rem;
+    }
+    @media(max-width:768px){ .gallery { columns: 2; } }
+    @media(max-width:480px){ .gallery { columns: 1; } }
+
+    .gallery-item {
+      break-inside: avoid;
+      margin-bottom: 1rem;
+      position: relative;
+      overflow: hidden;
+      border-radius: 3px;
+      border: 1px solid var(--border);
+    }
+    .gallery-item img {
+      width: 100%; display: block;
+      filter: grayscale(20%);
+      transition: filter .4s, transform .5s;
+    }
+    .gallery-item:hover img {
+      filter: grayscale(0%) saturate(1.3);
+      transform: scale(1.04);
+    }
+    .gallery-caption {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      background: linear-gradient(to top, rgba(10,10,15,.9), transparent);
+      padding: .8rem;
+      font-size: .7rem; color: var(--accent2);
+      letter-spacing: .1em; text-transform: uppercase;
+      transform: translateY(100%);
+      transition: transform .3s;
+    }
+    .gallery-item:hover .gallery-caption { transform: translateY(0); }
+
+    /* ── Footer ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 3rem 2rem;
+      text-align: center;
+      position: relative; z-index: 2;
+    }
+    .footer-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 3rem;
+      background: linear-gradient(90deg, var(--accent1), var(--accent2));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: .5rem;
+    }
+    .footer-copy { font-size: .65rem; color: var(--muted); letter-spacing: .15em; }
+
+    /* ── Reveal animation on scroll ── */
+    .reveal {
+      opacity: 0; transform: translateY(40px);
+      transition: opacity .7s ease, transform .7s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── Responsive ── */
+    @media(max-width: 768px) {
+      .timeline::before { left: 20px; }
+      .era-item { grid-template-columns: 1fr; }
+      .era-spacer, .era-empty { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<canvas id="bg-canvas"></canvas>
+
+<main>
+
+  <!-- ── HERO ── -->
+  <section class="hero">
+    <p class="hero-eyebrow">Una historia de pasión, distorsión y alma</p>
+    <h1 class="hero-title">ROCK<br>EN<br>ESPAÑOL</h1>
+    <p class="hero-sub">Desde los 80s hasta hoy — el rugido que nunca muere</p>
+    <div class="hero-scroll">SCROLL <span></span></div>
+  </section>
+
+  <!-- ── MARQUEE ── -->
+  <div class="marquee-wrap">
+    <div class="marquee-track">
+      <span>Rata Blanca</span><span class="dot">✦</span>
+      <span>Hombres G</span><span class="dot">✦</span>
+      <span>Enanitos Verdes</span><span class="dot">✦</span>
+      <span>Soda Stereo</span><span class="dot">✦</span>
+      <span>Los Fabulosos Cadillacs</span><span class="dot">✦</span>
+      <span>Divididos</span><span class="dot">✦</span>
+      <span>Caifanes</span><span class="dot">✦</span>
+      <span>La Ley</span><span class="dot">✦</span>
+      <span>Los Prisioneros</span><span class="dot">✦</span>
+      <span>Miguel Mateos</span><span class="dot">✦</span>
+      <!-- duplicate for seamless loop -->
+      <span>Rata Blanca</span><span class="dot">✦</span>
+      <span>Hombres G</span><span class="dot">✦</span>
+      <span>Enanitos Verdes</span><span class="dot">✦</span>
+      <span>Soda Stereo</span><span class="dot">✦</span>
+      <span>Los Fabulosos Cadillacs</span><span class="dot">✦</span>
+      <span>Divididos</span><span class="dot">✦</span>
+      <span>Caifanes</span><span class="dot">✦</span>
+      <span>La Ley</span><span class="dot">✦</span>
+      <span>Los Prisioneros</span><span class="dot">✦</span>
+      <span>Miguel Mateos</span><span class="dot">✦</span>
+    </div>
+  </div>
+
+  <!-- ── BANDS ── -->
+  <section>
+    <p class="section-label reveal">Los protagonistas</p>
+    <h2 class="section-title reveal">Las <em>Bandas</em><br>Legendarias</h2>
+    <div class="bands-grid">
+
+      <div class="band-card reveal">
+        <img class="band-img"
+          src="https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=600&q=80"
+          alt="Rata Blanca en concierto"/>
+        <div class="band-overlay"></div>
+        <div class="band-info">
+          <p class="band-country">🇦🇷 Argentina</p>
+          <h3 class="band-name">Rata Blanca</h3>
+          <p class="band-genre">Heavy Metal / Hard Rock</p>
+        </div>
+        <div class="band-year">1985</div>
+      </div>
+
+      <div class="band-card reveal">
+        <img class="band-img"
+          src="https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=600&q=80"
+          alt="Hombres G actuando"/>
+        <div class="band-overlay"></div>
+        <div class="band-info">
+          <p class="band-country">🇪🇸 España</p>
+          <h3 class="band-name">Hombres G</h3>
+          <p class="band-genre">Pop Rock / New Wave</p>
+        </div>
+        <div class="band-year">1982</div>
+      </div>
+
+      <div class="band-card reveal">
+        <img class="band-img"
+          src="https://images.unsplash.com/photo-1471478331149-c72f17e33c73?w=600&q=80"
+          alt="Enanitos Verdes en escenario"/>
+        <div class="band-overlay"></div>
+        <div class="band-info">
+          <p class="band-country">🇦🇷 Argentina</p>
+          <h3 class="band-name">Enanitos Verdes</h3>
+          <p class="band-genre">Rock / Pop Rock</p>
+        </div>
+        <div class="band-year">1979</div>
+      </div>
+
+      <div class="band-card reveal">
+        <img class="band-img"
+          src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=600&q=80"
+          alt="Soda Stereo"/>
+        <div class="band-overlay"></div>
+        <div class="band-info">
+          <p class="band-country">🇦🇷 Argentina</p>
+          <h3 class="band-name">Soda Stereo</h3>
+          <p class="band-genre">Rock Alternativo / New Wave</p>
+        </div>
+        <div class="band-year">1982</div>
+      </div>
+
+      <div class="band-card reveal">
+        <img class="band-img"
+          src="https://images.unsplash.com/photo-1524368535928-5b5e00ddc76b?w=600&q=80"
+          alt="Caifanes"/>
+        <div class="band-overlay"></div>
+        <div class="band-info">
+          <p class="band-country">🇲🇽 México</p>
+          <h3 class="band-name">Caifanes</h3>
+          <p class="band-genre">Rock Gótico / Rock Alternativo</p>
+        </div>
+        <div class="band-year">1987</div>
+      </div>
+
+      <div class="band-card reveal">
+        <img class="band-img"
+          src="https://images.unsplash.com/photo-1429962714451-bb934ecdc4ec?w=600&q=80"
+          alt="Los Fabulosos Cadillacs"/>
+        <div class="band-overlay"></div>
+        <div class="band-info">
+          <p class="band-country">🇦🇷 Argentina</p>
+          <h3 class="band-name">Los Fabulosos Cadillacs</h3>
+          <p class="band-genre">Rock / Ska / Reggae</p>
+        </div>
+        <div class="band-year">1985</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── QUOTE ── -->
+  <div class="quote-block">
+    <p class="quote-text reveal">"El rock en español no es una traducción — es una revolución con acento propio, con rabia propia, con corazón propio."</p>
+    <p class="quote-attr reveal">— La Voz del Movimiento</p>
+  </div>
+
+  <!-- ── HITS ── -->
+  <section class="hits-section">
+    <p class="section-label reveal">Canciones que marcaron generaciones</p>
+    <h2 class="section-title reveal"><em>Éxitos</em><br>Inmortales</h2>
+    <div class="hits-list">
+
+      <div class="hit-item reveal">
+        <span class="hit-num">01</span>
+        <div>
+          <p class="hit-title">Mujer Amante</p>
+          <p class="hit-band">Rata Blanca</p>
+          <div class="hit-bar"><div class="hit-fill" style="width:96%"></div></div>
+        </div>
+        <span class="hit-year">1990</span>
+      </div>
+
+      <div class="hit-item reveal">
+        <span class="hit-num">02</span>
+        <div>
+          <p class="hit-title">La Muralla Verde</p>
+          <p class="hit-band">Rata Blanca</p>
+          <div class="hit-bar"><div class="hit-fill" style="width:90%"></div></div>
+        </div>
+        <span class="hit-year">1992</span>
+      </div>
+
+      <div class="hit-item reveal">
+        <span class="hit-num">03</span>
+        <div>
+          <p class="hit-title">Marta tiene un marcapasos</p>
+          <p class="hit-band">Hombres G</p>
+          <div class="hit-bar"><div class="class="hit-fill" style="width:93%"></div></div>
+        </div>
+        <span class="hit-year">1985</span>
+      </div>
+
+      <div class="hit-item reveal">
+        <span class="hit-num">04</span>
+        <div>
+          <p class="hit-title">Devuélveme a mi chica</p>
+          <p class="hit-band">Hombres G</p>
+          <div class="hit-bar"><div class="hit-fill" style="width:97%"></div></div>
+        </div>
+        <span class="hit-year">1985</span>
+      </div>
+
+      <div class="hit-item reveal">
+        <span class="hit-num">05</span>
+        <div>
+          <p class="hit-title">Lamento Boliviano</p>
+          <p class="hit-band">Enanitos Verdes</p>
+          <div class="hit-bar"><div class="hit-fill" style="width:99%"></div></div>
+        </div>
+        <span class="hit-year">1994</span>
+      </div>
+
+      <div class="hit-item reveal">
+        <span class="hit-num">06</span>
+        <div>
+          <p class="hit-title">Tus Viejos</p>
+          <p class="hit-band">Enanitos Verdes</p>
+          <div class="hit-bar"><div class="hit-fill" style="width:88%"></div></div>
+        </div>
+        <span class="hit-year">1987</span>
+      </div>
+
+      <div class="hit-item reveal">
+        <span class="hit-num">07</span>
+        <div>
+          <p class="hit-title">De Música Ligera</p>
+          <p class="hit-band">Soda Stereo</p>
+          <div class="hit-bar"><div class="hit-fill" style="width:95%"></div></div>
+        </div>
+        <span class="hit-year">1990</span>
+      </div>
+
+      <div class="hit-item reveal">
+        <span class="hit-num">08</span>
+        <div>
+          <p class="hit-title">Persiana Americana</p>
+          <p class="hit-band">Soda Stereo</p>
+          <div class="hit-bar"><div class="hit-fill" style="width:92%"></div></div>
+        </div>
+        <span class="hit-year">1987</span>
+      </div>
+
+      <div class="hit-item reveal">
+        <span class="hit-num">09</span>
+        <div>
+          <p class="hit-title">La Negra Tomasa</p>
+          <p class="hit-band">Los Fabulosos Cadillacs</p>
+          <div class="hit-bar"><div class="hit-fill" style="width:91%"></div></div>
+        </div>
+        <span class="hit-year">1992</span>
+      </div>
+
+      <div class="hit-item reveal">
+        <span class="hit-num">10</span>
+        <div>
+          <p class="hit-title">La Celula que Explota</p>
+          <p class="hit-band">Caifanes</p>
+          <div class="hit-bar"><div class="hit-fill" style="width:87%"></div></div>
+        </div>
+        <span class="hit-year">1988</span>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── TIMELINE ── -->
+  <section>
+    <p class="section-label reveal">Una historia que se cuenta sola</p>
+    <h2 class="section-title reveal">La <em>Línea</em><br>del Tiempo</h2>
+    <div class="timeline">
+
+      <div class="era-item reveal">
+        <div class="era-content">
+          <p class="era-decade">70s</p>
+          <p class="era-desc">Las semillas germinan. El rock llega a Latinoamérica y España como un vendaval. Grupos pioneros empiezan a cantar en su lengua materna.</p>
+        </div>
+        <div class="era-spacer"><div class="era-dot">70s</div></div>
+        <div class="era-content era-empty"></div>
+      </div>
+
+      <div class="era-item reveal">
+        <div class="era-content era-empty"></div>
+        <div class="era-spacer"><div class="era-dot">80s</div></div>
+        <div class="era-content">
+          <p class="era-decade">80s</p>
+          <p class="era-desc">La explosión. Hombres G, Soda Stereo, Enanitos Verdes y Rata Blanca definen un sonido único. El rock en español conquista continentes.</p>
+        </div>
+      </div>
+
+      <div class="era-item reveal">
+        <div class="era-content">
+          <p class="era-decade">90s</p>
+          <p class="era-desc">La madurez del movimiento. Álbumes conceptuales, festivales masivos y una generación entera que crece al ritmo de distorsión y poesía.</p>
+        </div>
+        <div class="era-spacer"><div class="era-dot">90s</div></div>
+        <div class="era-content era-empty"></div>
+      </div>
+
+      <div class="era-item reveal">
+        <div class="era-content era-empty"></div>
+        <div class="era-spacer"><div class="era-dot">HOY</div></div>
+        <div class="era-content">
+          <p class="era-decade">2000s+</p>
+          <p class="era-desc">Las leyendas continúan. Nuevas bandas heredan la llama. El rock en español vive, se fusiona y sigue siendo el grito de una generación.</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── GALLERY ── -->
+  <section>
+    <p class="section-label reveal">Momentos congelados</p>
+    <h2 class="section-title reveal">La <em>Galería</em></h2>
+    <div class="gallery">
+
+      <div class="gallery-item reveal">
+        <img src="https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=600&q=80" alt="Concierto de rock"/>
+        <div class="gallery-caption">Noche de rock</div>
+      </div>
+
+      <div class="gallery-item reveal">
+        <img src="https://images.unsplash.com/photo-1598387993441-a364f854c3e1?w=600&q=80" alt="Guitarrista"/>
+        <div class="gallery-caption">La guitarra habla</div>
+      </div>
+
+      <div class="gallery-item reveal">
+        <img src="https://images.unsplash.com/photo-1540039155733-5bb30b53aa14?w=600&q=80" alt="Multitud en festival"/>
+        <div class="gallery-caption">El pueblo canta</div>
+      </div>
+
+      <div class="gallery-item reveal">
+        <img src="https://images.unsplash.com/photo-1470019693664-1d202d2c0907?w=600&q=80" alt="Backstage"/>
+        <div class="gallery-caption">Tras el telón</div>
+      </div>
+
+      <div class="gallery-item reveal">
+        <img src="https://images.unsplash.com/photo-1568602471122-7832951cc4c5?w=600&q=80" alt="Baterista"/>
+        <div class="gallery-caption">El ritmo es la vida</div>
+      </div>
+
+      <div class="gallery-item reveal">
+        <img src="https://images.unsplash.com/photo-1507838153414-b4b713384a76?w=600&q=80" alt="Amplificadores"/>
+        <div class="gallery-caption">Volumen al máximo</div>
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="footer-logo">Rock en Español</div>
+  <p class="footer-copy">// Una leyenda que nunca muere — desde los 80s hasta siempre //</p>
+</footer>
+
+<script>
+  /* ── Cursor ── */
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx = -100, my = -100, rx = -100, ry = -100;
+  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+  (function animCursor() {
+    cursor.style.left = mx + 'px'; cursor.style.top = my + 'px';
+    rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12;
+    ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+    requestAnimationFrame(animCursor);
+  })();
+
+  /* ── Starfield canvas ── */
+  const canvas = document.getElementById('bg-canvas');
+  const ctx = canvas.getContext('2d');
+  let W, H, stars = [], lines = [];
+  const NUM_STARS = 120;
+
+  function resize() {
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  function initStars() {
+    stars = Array.from({length: NUM_STARS}, () => ({
+      x: Math.random() * W, y: Math.random() * H,
+      r: Math.random() * 1.5 + 0.3,
+      vx: (Math.random() - 0.5) * 0.25,
+      vy: (Math.random() - 0.5) * 0.25,
+      alpha: Math.random() * 0.5 + 0.1
+    }));
+  }
+  initStars();
+
+  let mouseX = W/2, mouseY = H/2;
+  document.addEventListener('mousemove', e => { mouseX = e.clientX; mouseY = e.clientY; });
+
+  function drawStars() {
+    ctx.clearRect(0, 0, W, H);
+
+    /* subtle radial around cursor */
+    const grd = ctx.createRadialGradient(mouseX, mouseY, 0, mouseX, mouseY, 350);
+    grd.addColorStop(0, 'rgba(255,60,0,0.06)');
+    grd.addColorStop(1, 'transparent');
+    ctx.fillStyle = grd;
+    ctx.fillRect(0, 0, W, H);
+
+    stars.forEach(s => {
+      s.x += s.vx; s.y += s.vy;
+      if (s.x < 0) s.x = W; if (s.x > W) s.x = 0;
+      if (s.y < 0) s.y = H; if (s.y > H) s.y = 0;
+
+      /* subtle drift toward cursor */
+      const dx = mouseX - s.x, dy = mouseY - s.y;
+      const dist = Math.sqrt(dx*dx + dy*dy);
+      if (dist < 200) {
+        s.x += dx * 0.0003; s.y += dy * 0.0003;
+      }
+
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
+      ctx.fillStyle = `rgba(240,237,230,${s.alpha})`;
+      ctx.fill();
+    });
+
+    /* connecting lines for nearby stars */
+    for (let i = 0; i < stars.length; i++) {
+      for (let j = i+1; j < stars.length; j++) {
+        const dx = stars[i].x - stars[j].x;
+        const dy = stars[i].y - stars[j].y;
+        const d = Math.sqrt(dx*dx + dy*dy);
+        if (d < 90) {
+          ctx.beginPath();
+          ctx.moveTo(stars[i].x, stars[i].y);
+          ctx.lineTo(stars[j].x, stars[j].y);
+          ctx.strokeStyle = `rgba(255,204,0,${(1 - d/90) * 0.12})`;
+          ctx.lineWidth = 0.5;
+          ctx.stroke();
+        }
+      }
+    }
+
+    requestAnimationFrame(drawStars);
+  }
+  drawStars();
+
+  /* ── Scroll reveal ── */
+  const revealEls = document.querySelectorAll('.reveal');
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
+    });
+  }, { threshold: 0.12 });
+  revealEls.forEach(el => obs.observe(el));
+
+  /* ── Parallax on hero title ── */
+  window.addEventListener('scroll', () => {
+    const y = window.scrollY;
+    const title = document.querySelector('.hero-title');
+    if (title) title.style.transform = `translateY(${y * 0.3}px)`;
+  });
+</script>
+</body>
+</html>
